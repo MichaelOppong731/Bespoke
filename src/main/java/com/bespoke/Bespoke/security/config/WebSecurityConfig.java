@@ -9,11 +9,8 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.DefaultSecurityFilterChain;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -27,21 +24,28 @@ public class WebSecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public DefaultSecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        DefaultSecurityFilterChain build = http
+        return http
                 .csrf(c -> c.disable())
-                .authorizeHttpRequests(request -> request.requestMatchers("/registration").permitAll())
+                .authorizeHttpRequests(request -> {request.requestMatchers("/login", "/registration").permitAll();
+                request.requestMatchers("/Admin/**").hasAuthority("USER");
+                request.requestMatchers("/User/**").hasAuthority("ADMIN");
+                request.anyRequest().authenticated();
+                })
 
-                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
-                .logout(form -> form.invalidateHttpSession(true).clearAuthentication(true)
-                        .logoutRequestMatcher(new AntPathRequestMatcher("logout"))
-                        .logoutSuccessUrl("/login?logout").permitAll())
+                .formLogin(form -> {
+                    form.loginPage("/login").permitAll();
+                })
                 .build();
-        return build;
-
 
     }
+
+
+//                .logout(form -> form.invalidateHttpSession(true).clearAuthentication(true)
+//                        .logoutRequestMatcher(new AntPathRequestMatcher("logout"))
+//                        .logoutSuccessUrl("/login?logout").permitAll())
+
 
     @Bean
     public AuthenticationProvider authenticationManager(){

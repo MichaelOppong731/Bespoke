@@ -8,16 +8,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/bespoke/registration")
 public class AppUserController {
     @Autowired
     private AppUserService appUserService;
 
-    //Go to Registration Page
-    @GetMapping("/register")
-    public String registrationPage(){
-        return "register";
-    }
 
     //Read Form data to save into DataBase
     @PostMapping("/saveUser")
