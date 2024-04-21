@@ -43,17 +43,17 @@ public class AppUser implements UserDetails {
     @Column(name = "user_role")
     private String role;
 
-    public AppUser(String firstName, String lastName, String userName, String email, String password){
+    public AppUser(String firstName, String lastName, String username, String email, String password){
         this.firstName = firstName;
         this.lastName = lastName;
-        this.username = userName;
+        this.username = username;
         this.email = email;
         this.password = password;
     }
-    public AppUser(String firstName, String lastName, String userName, String email, String password, String role){
+    public AppUser(String firstName, String lastName, String username, String email, String password, String role){
         this.firstName = firstName;
         this.lastName = lastName;
-        this.username = userName;
+        this.username = username;
         this.email = email;
         this.password = password;
         this.role = role;

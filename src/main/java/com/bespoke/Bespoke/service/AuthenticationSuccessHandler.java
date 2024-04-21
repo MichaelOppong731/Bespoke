@@ -1,4 +1,4 @@
-package com.bespoke.Bespoke.controllers;
+package com.bespoke.Bespoke.service;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

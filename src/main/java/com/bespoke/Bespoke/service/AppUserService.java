@@ -22,27 +22,44 @@ public class AppUserService implements UserDetailsService {
     private static final String USER_NAME_NOT_FOUND = "User with email %s not found";
 
 
+
+    // This part deals with App User Authentication by Email
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
         Optional<AppUser> opt = appUserRepository.findByEmail(email);
-        if(opt.isEmpty()){
+        if (opt.isEmpty()) {
             throw new UsernameNotFoundException(
                     String.format(USER_NAME_NOT_FOUND, email)
+            );
+        } else {
+            return opt.get();
+        }
+    }
+
+    //Get username of Existing User
+    public UserDetails loadUserByUsernames(String username) throws UsernameNotFoundException {
+
+        Optional<AppUser> opt = appUserRepository.findByUsername(username);
+        if(opt.isEmpty()){
+            throw new UsernameNotFoundException(
+                    String.format(USER_NAME_NOT_FOUND, username)
             );
         }else {
             return opt.get();
         }
-
-
     }
-
-
-    public Integer saveUser(AppUser appUser) {
+    // Save User and manually assign the role of "USER" to the new user
+        public Integer saveUser(AppUser appUser) {
         String passwd = appUser.getPassword();
         String encodePasswd = passwordEncoder.encode(passwd);
         appUser.setPassword(encodePasswd);
         appUser = appUserRepository.save(appUser);
         return appUser.getId();
+    }
+
+    public Optional<AppUser> findByEmail(String email) {
+
+        return appUserRepository.findByEmail(email);
     }
 }

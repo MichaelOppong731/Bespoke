@@ -1,5 +1,6 @@
 package com.bespoke.Bespoke.security.config;
 
+import com.bespoke.Bespoke.service.AuthenticationSuccessHandler;
 import com.bespoke.Bespoke.service.AppUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,8 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.DefaultSecurityFilterChain;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -20,11 +22,14 @@ public class WebSecurityConfig {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private AppUserService appUserService;
+    @Autowired
+    private AuthenticationSuccessHandler authenticationSuccessHandler;
+
 
 
 
     @Bean
-    public DefaultSecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         return http
                 .csrf(c -> c.disable())
@@ -34,17 +39,20 @@ public class WebSecurityConfig {
                 request.anyRequest().authenticated();
                 })
 
-                .formLogin(form -> {
-                    form.loginPage("/login").permitAll();
-                })
+                .formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login")
+                        .successHandler(authenticationSuccessHandler).permitAll())
+
+                .logout(form -> form.invalidateHttpSession(true).clearAuthentication(true)
+                        .logoutRequestMatcher(new AntPathRequestMatcher("logout"))
+                        .logoutSuccessUrl("/login?logout").permitAll())
+
+
                 .build();
 
     }
 
 
-//                .logout(form -> form.invalidateHttpSession(true).clearAuthentication(true)
-//                        .logoutRequestMatcher(new AntPathRequestMatcher("logout"))
-//                        .logoutSuccessUrl("/login?logout").permitAll())
+
 
 
     @Bean
