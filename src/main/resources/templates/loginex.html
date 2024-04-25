@@ -1,73 +1,119 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Forgot Password</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
+        .container {
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             height: 100vh;
         }
 
-        .login-container {
+        .form-container {
             background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 30px;
+            border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            width: 400px; /* Adjust the width as per your preference */
         }
 
         h2 {
             text-align: center;
-            color: #333;
+            color: #5e057e;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            color: #333;
+            margin-bottom: 5px;
+            color: #5e057e;
+            font-weight: bold;
         }
 
-        input {
+        input[type="email"],
+        input[type="text"],
+        input[type="password"] {
             width: 100%;
             padding: 10px;
-            margin-bottom: 16px;
-            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-weight: bold;
         }
 
-        button {
-            background-color: #4caf50;
+        button[type="submit"] {
+            background-color: #5e057e;
             color: #fff;
-            padding: 10px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: 3px;
             cursor: pointer;
             width: 100%;
+            font-weight: bold;
         }
 
-        button:hover {
-            background-color: #45a049;
+        button[type="submit"]:hover {
+            background-color: #c299d0;
+        }
+
+        .error-message,
+        .success-message {
+            background-color: #5e057e;
+            color: #fff;
+            padding: 10px;
+            border-radius: 3px;
+            text-align: center;
+        }
+
+        span {
+            display: block;
         }
     </style>
 </head>
 <body>
-<div class="login-container">
-    <h2>Login</h2>
-    <form action="/login" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
+<div class="container">
+    <div class="form-container">
 
-        <button type="submit">Login</button>
-    </form>
+
+        <div th:if="${errorMessage != null}">
+            <div class="error-message">
+                <p>[[ERROR_MESSAGE]]</p>
+            </div>
+        </div>
+
+        <div th:if="${successMessage != null}">
+            <div class="success-message">
+                <p>Password Reset Link Sent to your email</p>
+            </div>
+        </div>
+
+
+        <h2>Forgot Password</h2>
+        <form
+                method="post"
+                role="form"
+                th:action="@{/password-request}"
+        >
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input th:field="*{email}" type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+        <span> Register here: <a th:href="@{/register}">Register</a></span>
+        <span> <a th:href="@{/login}">Login</a></span>
+    </div>
 </div>
+
 </body>
 </html>

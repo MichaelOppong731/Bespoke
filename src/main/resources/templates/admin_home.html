@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="ISO-8859-1">
     <title>Home</title>
@@ -40,7 +40,7 @@
 <div class="dashboard">
     <h1 class="dashboard__title">Welcome to the Dashboard</h1>
     <div class="dashboard__user">
-        <h2 th:text="${userdetail.username}" class="dashboard__user-name">User's Name</h2>
+        <h2 th:text="${userdetail.firstName}" class="dashboard__user-name">User's Name</h2>
     </div>
 </div>
 <span sec:authorize="isAuthenticated"><a th:href="@{/logout}">Logout</a></span>

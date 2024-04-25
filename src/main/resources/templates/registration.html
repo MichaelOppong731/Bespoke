@@ -106,7 +106,7 @@
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
-                <input th:field="*{email}" type="text" id="email" name="email" placeholder="Enter your Email" required>
+                <input th:field="*{email}" type="email" id="email" name="email" placeholder="Enter your Email" required>
                 <span th:if="${userexist}" style="color: red;">Email is Already Taken</span>
             </div>
             <div class="form-group">

@@ -40,7 +40,7 @@ public class ContentController {
     @GetMapping("/user/home")
     public String userHome(Model model, Principal principal){
 
-        UserDetails userDetails = appUserService.loadUserByUsernames(principal.getName());
+        AppUser userDetails = (AppUser) appUserService.loadUserByUsernames(principal.getName());
         model.addAttribute("userdetail" , userDetails);
         return "user_home";
     }

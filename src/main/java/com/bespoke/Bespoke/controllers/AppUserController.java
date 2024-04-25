@@ -4,12 +4,14 @@ import com.bespoke.Bespoke.entities.AppUser;
 import com.bespoke.Bespoke.models.UserModel;
 import com.bespoke.Bespoke.service.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Optional;
 
-@RestController
+@Controller
 public class AppUserController {
     @Autowired
     private AppUserService appUserService;
@@ -34,7 +36,7 @@ public class AppUserController {
             appUser.setRole("USER");
             appUserService.saveUser(appUser);
 
-        return "redirect:/registration?success";
+        return "redirect:/register?success";
     }
 
 }

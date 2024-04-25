@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Error</title>
 </head>
 <body>
-$END$
+    <div th:if="${error != null}">
+        <h1>[[${error}]]</h1>
+    </div>
 </body>
 </html>

@@ -33,7 +33,9 @@ public class WebSecurityConfig {
 
         return http
                 .csrf(c -> c.disable())
-                .authorizeHttpRequests(request -> {request.requestMatchers("/login", "/registration").permitAll();
+                .authorizeHttpRequests(request -> {request.requestMatchers("/login", "/register"
+                ,"/password-request", "/reset-password").permitAll();
+                request.requestMatchers("/many").permitAll();
                 request.requestMatchers("/Admin/**").hasAuthority("USER");
                 request.requestMatchers("/User/**").hasAuthority("ADMIN");
                 request.anyRequest().authenticated();
@@ -43,7 +45,7 @@ public class WebSecurityConfig {
                         .successHandler(authenticationSuccessHandler).permitAll())
 
                 .logout(form -> form.invalidateHttpSession(true).clearAuthentication(true)
-                        .logoutRequestMatcher(new AntPathRequestMatcher("logout"))
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessUrl("/login?logout").permitAll())
 
 
