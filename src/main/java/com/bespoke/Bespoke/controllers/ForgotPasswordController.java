@@ -79,10 +79,10 @@ public class ForgotPasswordController {
         appUser.setPassword(passwordEncoder.encode(password));
         forgotPasswordToken.setUsed(true);//set isUsed to true
         //save changes made to appuser since password has been changed
-        appUserService.saveUser(appUser);
+        appUserService.updatePassword(appUser);
         //Save changes made to forgotPassword token since "isUsed" status has been set to true
         forgotPasswordService.saveToken(forgotPasswordToken);
         model.addAttribute("message", "Your password has been changed successfully!!");
-        return "save-reset-password";
+        return "reset_password";
     }
 }

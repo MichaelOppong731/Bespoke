@@ -58,6 +58,10 @@ public class AppUserService implements UserDetailsService {
         return appUser.getId();
     }
 
+        public void updatePassword(AppUser appUser){
+        appUserRepository.save(appUser);
+        }
+
     public Optional<AppUser> findByEmail(String email) {
 
         return appUserRepository.findByEmail(email);
