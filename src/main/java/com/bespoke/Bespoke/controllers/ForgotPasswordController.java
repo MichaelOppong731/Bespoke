@@ -60,7 +60,7 @@ public class ForgotPasswordController {
             model.addAttribute("error", "Error while sending email");
             return "forgotPassword";
         }
-        return "redirect:/password-request?success";
+        return "redirect:/forgotPassword?success";
     }
 
     @GetMapping("/reset-password")
