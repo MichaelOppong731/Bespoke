@@ -1,10 +1,105 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="ISO-8859-1">
+    <title>Upload Video</title>
+    <style>
+        body {
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .upload-form {
+            background-color: #fff;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .upload-form__title {
+            font-size: 24px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .upload-form__label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .upload-form__input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .upload-form__button {
+            background-color: #5e057e;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .upload-form__button:hover {
+            background-color: #4b036a;
+        }
+
+        .success-message {
+            background-color: #2ecc71;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
 </head>
+
 <body>
-$END$
+
+<div class="container">
+
+    <div class="upload-form">
+        <h2 class="upload-form__title">Upload Video</h2>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <label class="upload-form__label" for="videoTitle">Title:</label>
+            <input class="upload-form__input" type="text" id="videoTitle" name="title" required>
+
+            <label class="upload-form__label" for="videoDescription">Description:</label>
+            <input class="upload-form__input" type="text" id="videoDescription" name="description" required>
+
+            <label class="upload-form__label" for="videoFile">Choose Video:</label>
+            <input class="upload-form__input" type="file" id="videoFile" name="file" accept="video/mp4" required>
+
+            <button class="upload-form__button" type="submit">Upload</button>
+        </form>
+
+        <div class="success-message" th:if="${successMessage}">
+            Video successfully uploaded!
+            <a href="/">Back to Home</a>
+        </div>
+    </div>
+
+</div>
+
 </body>
 </html>

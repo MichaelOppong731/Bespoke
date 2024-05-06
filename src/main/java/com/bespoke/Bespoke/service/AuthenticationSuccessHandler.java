@@ -20,9 +20,9 @@ public class AuthenticationSuccessHandler implements org.springframework.securit
         var authourities = authentication.getAuthorities();
         var roles = authourities.stream().map(r -> r.getAuthority()).findFirst();
 
-        if (roles.orElse("").equals("ADMIN")) {
+        if (roles.orElse("").equals("ROLE_ADMIN")) {
             response.sendRedirect("/admin/home");
-        } else if (roles.orElse("").equals("USER")) {
+        } else if (roles.orElse("").equals("ROLE_USER")) {
             response.sendRedirect("/user/home");
         } else {
             response.sendRedirect("/error");

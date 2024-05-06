@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Home</title>
+    <style>
+        body {
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .dashboard {
+            background-color: #5e057e;
+            color: #fff;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .dashboard__title {
+            font-size: 24px;
+            margin-top: 0;
+        }
+
+        .dashboard__user {
+            margin-top: 20px;
+        }
+
+        .dashboard__user-name {
+            font-size: 50px;
+            color: #c299d0;
+        }
+
+        .video-info {
+            background-color: #eee;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .video-info__title {
+            font-size: 24px;
+            margin-top: 0;
+        }
+
+        .video-info__description {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .video-player {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #000;
+            margin-bottom: 20px;
+            position: relative; /* Added to position the share button */
+        }
+
+        .video-player video {
+            width: 100%;
+            height: auto;
+        }
+
+        .share-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #5e057e;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .video-navigation {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .video-navigation__button {
+            background-color: #fff;
+            color: #5e057e;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .video-navigation__button:last-child {
+            margin-right: 0;
+        }
+
+        .video-navigation__button:hover {
+            background-color: #c299d0;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="dashboard">
+    <h1 class="dashboard__title">Welcome to the Dashboard</h1>
+    <div class="dashboard__user">
+        <h2 th:text="${userdetail.firstName}" class="dashboard__user-name">User's Name</h2>
+    </div>
+    <span sec:authorize="isAuthenticated"><a th:href="@{/logout}">Logout</a></span>
+</div>
+
+<div class="video-info">
+    <h2 class="video-info__title">Video Title</h2>
+    <p class="video-info__description">Video Description</p>
+</div>
+
+<div class="video-player">
+    <!-- Placeholder for video player -->
+    <video controls id="video-player">
+        <source src="" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <button class="share-button" onclick="copyVideoLink()">Share</button>
+</div>
+
+<div class="video-navigation">
+    <h2>Video Navigation</h2>
+    <button class="video-navigation__button" onclick="previousVideo()">Previous Video</button>
+    <button class="video-navigation__button" onclick="nextVideo()">Next Video</button>
+</div>
+
+<script>
+    var videoUrls = [
+        "/path/to/video1.mp4",
+        "/path/to/video2.mp4",
+        "/path/to/video3.mp4"
+    ];
+
+    var videoTitles = [
+        "Video 1 Title",
+        "Video 2 Title",
+        "Video 3 Title"
+    ];
+
+    var videoDescriptions = [
+        "Description of Video 1",
+        "Description of Video 2",
+        "Description of Video 3"
+    ];
+
+    var currentIndex = 0;
+    var videoPlayer = document.getElementById('video-player');
+    var videoTitle = document.querySelector('.video-info__title');
+    var videoDescription = document.querySelector('.video-info__description');
+
+    // Set initial video source, title, and description
+    videoPlayer.src = videoUrls[currentIndex];
+    videoTitle.textContent = videoTitles[currentIndex];
+    videoDescription.textContent = videoDescriptions[currentIndex];
+
+    function previousVideo() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            videoPlayer.src = videoUrls[currentIndex];
+            videoTitle.textContent = videoTitles[currentIndex];
+            videoDescription.textContent = videoDescriptions[currentIndex];
+        }
+    }
+
+    function nextVideo() {
+        if (currentIndex < videoUrls.length - 1) {
+            currentIndex++;
+            videoPlayer.src = videoUrls[currentIndex];
+            videoTitle.textContent = videoTitles[currentIndex];
+            videoDescription.textContent = videoDescriptions[currentIndex];
+        }
+    }
+
+    function copyVideoLink() {
+        var videoUrl = videoUrls[currentIndex];
+        navigator.clipboard.writeText(videoUrl).then(function() {
+            alert("Link to video copied!");
+        }, function() {
+            alert("Failed to copy link to video.");
+        });
+    }
+</script>
+
+</body>
+</html>

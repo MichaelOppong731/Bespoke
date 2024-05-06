@@ -22,7 +22,7 @@ public class BespokeApplication {
 			AppUser Admin = new AppUser("Paul","Oppong",
 					"Admin","michaeloppong731@gmail.com",
 					passwordEncoder.encode("password"),
-                    "ADMIN");
+                    "ROLE_ADMIN");
 			appUserRepository.save(Admin);
 
 		};

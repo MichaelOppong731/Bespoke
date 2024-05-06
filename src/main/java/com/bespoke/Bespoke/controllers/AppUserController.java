@@ -33,7 +33,7 @@ public class AppUserController {
             appUser.setUsername(userModel.getUsername());
             appUser.setEmail(userModel.getEmail());
             appUser.setPassword(userModel.getPassword());
-            appUser.setRole("USER");
+            appUser.setRole("ROlE_USER");
             appUserService.saveUser(appUser);
 
         return "redirect:/register?success";
