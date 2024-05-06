@@ -136,39 +136,24 @@
 <div class="navigation">
     <a th:href="@{/home}" class="navigation__link">HomePage</a>
     <a th:href="@{/upload}" class="navigation__link">Upload Video</a>
-    <button class="share-button" onclick="copyVideoLink()">Share</button>
+    <button class="share-button">Share</button>
     <span sec:authorize="isAuthenticated"><a th:href="@{/logout}" class="navigation__link">Logout</a></span>
 </div>
 
 <!-- Display the video details -->
-<div class="video-info" th:if="${video != null}">
-    <h2 class="video-info__title" th:text="${video.title}">Video Title</h2>
-    <p class="video-info__description" th:text="${video.description}">Video Description</p>
+<div class="video-info">
+    <h2 class="video-info__title" ></h2>
+    <p class="video-info__description"></p>
 </div>
 
-<!-- Display the video player -->
+
+ Display the video player
 <div class="video-player">
-    <video controls>
-        <source th:if="${video != null}" th:src="@{/video/{id}/play(id=${video.id})}" type="video/mp4">
+    <video id="mainVideoPlayer" controls>
+
         Your browser does not support the video tag.
     </video>
 </div>
-
-<!-- Display the video player -->
-<!--<div class="video-player">-->
-<!--    <video controls>-->
-<!--        <source th:if="${videoFile != null}" th:src="@{${videoFile.uri}}" type="video/mp4">-->
-<!--        Your browser does not support the video tag.-->
-<!--    </video>-->
-<!--</div>-->
-<!-- Display the video player -->
-<!--<div class="video-player">-->
-<!--    <video controls>-->
-<!--        <source th:src="@{${videoFile.contentLength > 0} ? @{/video/{id}/play} : ''}"-->
-<!--                th:if="${videoFile != null}" type="video/mp4">-->
-<!--        Your browser does not support the video tag.-->
-<!--    </video>-->
-<!--</div>-->
 
 
 <!-- Video navigation buttons -->
@@ -179,55 +164,74 @@
 </div>
 
 <script>
-    function copyVideoLink() {
-        var videoId = document.querySelector('.video-info__title').id.replace('title-', '');
-        var videoLink = window.location.origin + '/video/' + videoId + '/play';
-        navigator.clipboard.writeText(videoLink).then(function() {
-            alert('Video link copied to clipboard: ' + videoLink);
-        }, function() {
-            alert('Failed to copy video link.');
-        });
+
+    //Share button
+  function copyVideoLink() {
+    let currentVideo = availableVideos[currentIndex];
+    let videoLink = window.location.origin + '/video/' + currentVideo.id + '/play';
+
+    navigator.clipboard.writeText(videoLink).then(function () {
+        alert('Video link copied to clipboard!');
+    }, function() {
+        alert('Failed to copy video link.');
+    });
+}
+
+    // Attach the event listener to the share button
+    document.querySelector('.share-button').addEventListener('click', copyVideoLink);
+
+
+
+    let currentIndex = 0;
+    let availableVideos = [];
+
+    // Function to fetch and store videos once
+    function fetchVideos() {
+        fetch('/api/v1/videos') // Adjust if your API endpoint is different
+            .then(response => response.json())
+            .then(data => {
+                availableVideos = data;
+            })
+            .catch(error => console.error("Error fetching videos:", error));
     }
 
-    function copyVideoLink() {
-        var videoId = document.querySelector('.video-info__title').id.replace('title-', '');
-        var videoLink = window.location.origin + '/video/' + videoId + '/play';
-        navigator.clipboard.writeText(videoLink).then(function() {
-            alert('Video link copied to clipboard: ' + videoLink);
-        }, function() {
-            alert('Failed to copy video link.');
-        });
+    function nextVideo() {
+        if (availableVideos.length === 0) {
+            fetchVideos();
+            return;
+        }
+
+        currentIndex = (currentIndex + 1) % availableVideos.length;
+        let nextVideo = availableVideos[currentIndex];
+
+        document.querySelector('.video-info__title').textContent = nextVideo.title;
+        document.querySelector('.video-info__description').textContent = nextVideo.description;
+
+        let videoPlayer = document.getElementById('mainVideoPlayer');
+        videoPlayer.src = `/video/${nextVideo.id}/play`;
+        videoPlayer.load();
+    }
+
+    function previousVideo() {
+        currentIndex = (currentIndex - 1 + availableVideos.length) % availableVideos.length;
+        let previousVideo = availableVideos[currentIndex];
+
+         // Update video title and description (same logic as in nextVideo)
+        document.querySelector('.video-info__title').textContent = previousVideo.title;
+        document.querySelector('.video-info__description').textContent = previousVideo.description;
+
+        // Update video source
+        let videoPlayer = document.getElementById('mainVideoPlayer');
+        videoPlayer.src = `/video/${previousVideo.id}/play`;
+        videoPlayer.load();
     }
 
     (function() {
-        var currentIndex = 0;
-        var videos = document.querySelectorAll('.video-info');
-
-        function playVideo(index) {
-            if (index >= 0 && index < videos.length) {
-                var video = videos[index];
-                var title = video.querySelector('.video-info__title').textContent;
-                var description = video.querySelector('.video-info__description').textContent;
-
-                document.querySelector('.video-info__title').textContent = title;
-                document.querySelector('.video-info__description').textContent = description;
-
-                currentIndex = index;
-            }
-        }
-
-        function previousVideo() {
-            playVideo(currentIndex - 1);
-        }
-
-        function nextVideo() {
-            playVideo(currentIndex + 1);
-        }
-
         // Initial setup
-        playVideo(currentIndex);
+        fetchVideos();
     })();
 </script>
+
 
 
 </body>

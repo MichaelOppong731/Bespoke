@@ -38,30 +38,26 @@ public class VideoController {
     private AppUserService appUserService;
     @Autowired
     private VideoService videoService;
-//    @GetMapping("/watch")
-//    public String getVideos(Model model, Principal principal){
-//        // Load the user details from your appUserService
-//        AppUser userDetails = (AppUser) appUserService.loadUserByUsernames(principal.getName());
-//        model.addAttribute("userdetail", userDetails);
-//        //Load all Available videos
-//        List<Video> videos = videoService.getAllVideos();
-//        model.addAttribute("videos", videos);
-//
-//        return "videosPage";
-//    }
 
 
-    @GetMapping("/video/{id}/play")
-    public String playVideo(@PathVariable("id") Integer id, Model model, Principal principal) {
-        // Retrieve user details from the principal
+
+    @GetMapping("/videos")
+    public String getVideos(Model model, Principal principal){
+        // Load the user details from your appUserService
         AppUser userDetails = (AppUser) appUserService.loadUserByUsernames(principal.getName());
         model.addAttribute("userdetail", userDetails);
 
-        // Retrieve video details based on the ID using videoService
+        return "videosPage";
+    }
+
+
+    //Endpoint to fetch video content based on video ID
+    @GetMapping("/video/{id}/play")
+    public ResponseEntity<Resource> playVideo(@PathVariable("id") Integer id) {
+        // Retrieve video content based on the ID using videoService
         Optional<Video> optionalVideo = videoService.getVideoById(id);
         if (!optionalVideo.isPresent()) {
-            // Handle case where video is not found
-            return "403"; // Redirect to an error page
+            return ResponseEntity.notFound().build();
         }
 
         Video video = optionalVideo.get();
@@ -73,45 +69,13 @@ public class VideoController {
             resource = new UrlResource(videoPath.toUri());
         } catch (MalformedURLException e) {
             e.printStackTrace();
-            return "403"; // Redirect to an error page
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
-        // Pass user details, video details, and video file to the model
-        model.addAttribute("userdetail", userDetails);
-        model.addAttribute("video", video);
-        model.addAttribute("videoFile", resource);
-
-        return "videosPage"; // Return the videosPage template
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("video/mp4"))
+                .body(resource);
     }
-
-
-
-
-    // Endpoint to fetch video content based on video ID
-//    @GetMapping("/video/{id}/play")
-//    public ResponseEntity<Resource> playVideo(@PathVariable("id") Integer id) {
-//        // Retrieve video content based on the ID using videoService
-//        Optional<Video> optionalVideo = videoService.getVideoById(id);
-//        if (!optionalVideo.isPresent()) {
-//            return ResponseEntity.notFound().build();
-//        }
-//
-//        Video video = optionalVideo.get();
-//
-//        // Construct the path to the video file
-//        Path videoPath = Paths.get(uploadDir, video.getFilePath());
-//        Resource resource;
-//        try {
-//            resource = new UrlResource(videoPath.toUri());
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//        }
-//
-//        return ResponseEntity.ok()
-//                .contentType(MediaType.parseMediaType("video/mp4"))
-//                .body(resource);
-//    }
 
     @GetMapping("/upload")
     public String showUpLoadPage(HttpServletResponse response){
