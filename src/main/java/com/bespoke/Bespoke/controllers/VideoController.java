@@ -43,7 +43,7 @@ public class VideoController {
 
     @GetMapping("/videos")
     public String getVideos(Model model, Principal principal){
-        // Load the user details from your appUserService
+        // Load the user details from appUserService
         AppUser userDetails = (AppUser) appUserService.loadUserByUsernames(principal.getName());
         model.addAttribute("userdetail", userDetails);
 
@@ -78,7 +78,11 @@ public class VideoController {
     }
 
     @GetMapping("/upload")
-    public String showUpLoadPage(HttpServletResponse response){
+    public String showUpLoadPage(Model model, Principal principal, HttpServletResponse response){
+        // Load the user details from appUserService
+        AppUser userDetails = (AppUser) appUserService.loadUserByUsernames(principal.getName());
+        model.addAttribute("userdetail", userDetails);
+
         // Set Cache-Control header to prevent caching
         response.setHeader("Cache-Control", "no-store");
         return "upload_video";

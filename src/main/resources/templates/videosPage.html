@@ -147,7 +147,7 @@
 </div>
 
 
- Display the video player
+<!-- Display the video player-->
 <div class="video-player">
     <video id="mainVideoPlayer" controls>
 
@@ -177,7 +177,7 @@
     });
 }
 
-    // Attach the event listener to the share button
+    // Attaching the event listener to the share button
     document.querySelector('.share-button').addEventListener('click', copyVideoLink);
 
 
@@ -187,12 +187,20 @@
 
     // Function to fetch and store videos once
     function fetchVideos() {
-        fetch('/api/v1/videos') // Adjust if your API endpoint is different
-            .then(response => response.json())
-            .then(data => {
-                availableVideos = data;
-            })
-            .catch(error => console.error("Error fetching videos:", error));
+        return fetch('/api/v1/videos')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch videos');
+            }
+            return response.json();
+        })
+        .then(data => {
+            availableVideos = data;
+        })
+        .catch(error => {
+            console.error("Error fetching videos:", error);
+            throw error; // Re-throw the error to be caught by the caller
+        });
     }
 
     function nextVideo() {
@@ -210,6 +218,7 @@
         let videoPlayer = document.getElementById('mainVideoPlayer');
         videoPlayer.src = `/video/${nextVideo.id}/play`;
         videoPlayer.load();
+        updateButtonVisibility();
     }
 
     function previousVideo() {
@@ -224,12 +233,73 @@
         let videoPlayer = document.getElementById('mainVideoPlayer');
         videoPlayer.src = `/video/${previousVideo.id}/play`;
         videoPlayer.load();
+        updateButtonVisibility();
+    }
+    // Helper function to update video details and player
+    function updateVideoDisplay() {
+        const videoInfoTitle = document.querySelector('.video-info__title');
+        const videoInfoDescription = document.querySelector('.video-info__description');
+        const videoPlayer = document.getElementById('mainVideoPlayer');
+
+        if (availableVideos.length > 0) {
+            const currentVideo = availableVideos[currentIndex];
+            videoInfoTitle.textContent = currentVideo.title;
+            videoInfoDescription.textContent = currentVideo.description;
+            videoPlayer.src = `/video/${currentVideo.id}/play`;
+            videoPlayer.load();
+            videoPlayer.style.display = 'block';
+        } else {
+            // No videos available, display message
+            videoInfoTitle.textContent = "No videos available.";
+            videoInfoDescription.textContent = "";
+            videoPlayer.style.display = 'none';
+        }
+
+        // Always update button visibility
+        updateButtonVisibility();
     }
 
-    (function() {
-        // Initial setup
-        fetchVideos();
-    })();
+
+        // Function to control button visibility
+    function updateButtonVisibility() {
+        let nextButton = document.querySelector('.video-navigation__button:last-child');
+        let prevButton = document.querySelector('.video-navigation__button:first-child');
+
+        if (nextButton && prevButton) { // Check if buttons exist
+            // Hide previous button if at the beginning of videos or no videos available
+            if (currentIndex === 0 || availableVideos.length === 0) {
+                prevButton.style.display = 'none';
+            } else {
+                prevButton.style.display = 'block';
+            }
+
+            // Hide next button if at the end of videos or no videos available
+            if (currentIndex === availableVideos.length - 1 || availableVideos.length === 0) {
+                nextButton.style.display = 'none';
+            } else {
+                nextButton.style.display = 'block';
+            }
+        }
+    }
+
+
+    function displayFirstVideo() {
+        fetchVideos().then(() => {
+            if (availableVideos.length > 0) {
+                currentIndex = 0;
+                updateVideoDisplay();
+                updateButtonVisibility();
+            }
+        }).catch(error => {
+            console.error("Failed to fetch videos:", error);
+            // Handle error, e.g., display an error message to the user
+        });
+    }
+
+    // Add the event listener for when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        displayFirstVideo();
+    });
 </script>
 
 

@@ -135,9 +135,6 @@
 
 <div class="navigation">
     <a th:href="@{/videos}" class="navigation__link">Watch Videos</a>
-
-
-    <!--    <a th:href="@{/watch}" class="navigation__link">Watch Videos</a>-->
     <a th:href="@{/upload}" class="navigation__link">Upload Video</a>
     <span sec:authorize="isAuthenticated"><a th:href="@{/logout}" class="navigation__link">Logout</a></span>
 </div>

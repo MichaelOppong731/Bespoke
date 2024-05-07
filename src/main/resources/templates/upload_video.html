@@ -10,6 +10,117 @@
             padding: 0;
         }
 
+        .dashboard {
+            background-color: #5e057e;
+            color: #fff;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .dashboard__title {
+            font-size: 24px;
+            margin-top: 0;
+        }
+
+        .dashboard__user {
+            margin-top: 20px;
+        }
+
+        .dashboard__user-name {
+            font-size: 50px;
+            color: #c299d0;
+        }
+
+        .navigation {
+            background-color: #5e057e;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .navigation__link {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .navigation__link:hover {
+            background-color: #4b036a;
+        }
+
+        .video-info {
+            background-color: #eee;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .video-info__title {
+            font-size: 24px;
+            margin-top: 0;
+        }
+
+        .video-info__description {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .video-player {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #000;
+            margin-bottom: 20px;
+        }
+
+        .video-player video {
+            width: 100%;
+            height: auto;
+        }
+
+        .share-button {
+            background-color: #5e057e;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .share-button:hover {
+            background-color: #4b036a;
+        }
+
+        .video-navigation {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .video-navigation__button {
+            background-color: #fff;
+            color: #5e057e;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .video-navigation__button:last-child {
+            margin-right: 0;
+        }
+
+        .video-navigation__button:hover {
+            background-color: #c299d0;
+            color: #fff;
+
         .container {
             display: flex;
             flex-direction: column;
@@ -75,6 +186,19 @@
 </head>
 
 <body>
+
+<div class="dashboard">
+    <h1 class="dashboard__title">Welcome to the Dashboard</h1>
+    <div class="dashboard__user">
+        <h2 th:text="${userdetail.firstName}" class="dashboard__user-name">User's Name</h2>
+    </div>
+</div>
+
+<div class="navigation">
+    <a th:href="@{/home}" class="navigation__link">Home</a>
+    <a th:href="@{/videos}" class="navigation__link">Watch Videos</a>
+    <span sec:authorize="isAuthenticated"><a th:href="@{/logout}" class="navigation__link">Logout</a></span>
+</div>
 
 <div class="container">
 
