@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Videos page</title>
-    <link rel="stylesheet" type="text/css" href="/static/css/video.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/video.css}">
+
     <style>
 
     </style>
@@ -43,7 +44,6 @@
     <button class="video-navigation__button" onclick="previousVideo()">Previous Video</button>
     <button class="video-navigation__button" onclick="nextVideo()">Next Video</button>
 </div>
-
-<script src="/static/js/videoscript.js"></script>
+<script type="text/javascript" th:src="@{/js/videoscript.js}"></script>
 </body>
 </html>
