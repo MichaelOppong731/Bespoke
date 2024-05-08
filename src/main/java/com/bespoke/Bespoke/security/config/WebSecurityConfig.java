@@ -35,8 +35,8 @@ public class WebSecurityConfig {
                 .csrf(c -> c.disable())
                 .authorizeHttpRequests(request -> {request.requestMatchers("/login", "/register"
                 ,"/password-request", "/reset-password").permitAll();
-                request.requestMatchers("/Admin/**").hasAuthority("ROLE_USER");
-                request.requestMatchers("/User/**").hasAuthority("ROLE_ADMIN");
+                request.requestMatchers("/Admin/**","/upload").hasAuthority("ROLE_ADMIN");
+                request.requestMatchers("/User/**").hasAuthority("ROLE_USER");
                 request.requestMatchers("/video/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN");
 
                     request.anyRequest().authenticated();

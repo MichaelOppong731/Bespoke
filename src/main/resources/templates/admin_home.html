@@ -1,37 +1,126 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="ISO-8859-1">
+    <meta charset="UTF-8">
     <title>Home</title>
     <style>
         body {
-           background-color: #f5f5f5;
-           margin: 0;
-           padding: 0;
-       }
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
 
-       .dashboard {
-           background-color: #5e057e;
-           color: #fff;
-           padding: 40px;
-           text-align: center;
-       }
+        .dashboard {
+            background-color: #5e057e;
+            color: #fff;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-       .dashboard__title {
-           font-size: 24px;
-           margin-top: 0;
-       }
+        .dashboard__title {
+            font-size: 24px;
+            margin-top: 0;
+        }
 
-       .dashboard__user {
-           margin-top: 20px;
-       }
+        .dashboard__user {
+            margin-top: 20px;
+        }
 
-       .dashboard__user-name {
-           font-size: 50px;
-           color: #c299d0;
-       }
+        .dashboard__user-name {
+            font-size: 50px;
+            color: #c299d0;
+        }
 
+        .navigation {
+            background-color: #5e057e;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            margin-top: 20px;
+        }
 
+        .navigation__link {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .navigation__link:hover {
+            background-color: #4b036a;
+        }
+
+        .video-info {
+            background-color: #eee;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .video-info__title {
+            font-size: 24px;
+            margin-top: 0;
+        }
+
+        .video-info__description {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .video-player {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #000;
+            margin-bottom: 20px;
+        }
+
+        .video-player video {
+            width: 100%;
+            height: auto;
+        }
+
+        .share-button {
+            background-color: #5e057e;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .share-button:hover {
+            background-color: #4b036a;
+        }
+
+        .video-navigation {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .video-navigation__button {
+            background-color: #fff;
+            color: #5e057e;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .video-navigation__button:last-child {
+            margin-right: 0;
+        }
+
+        .video-navigation__button:hover {
+            background-color: #c299d0;
+            color: #fff;
+        }
     </style>
 </head>
 
@@ -43,6 +132,12 @@
         <h2 th:text="${userdetail.firstName}" class="dashboard__user-name">User's Name</h2>
     </div>
 </div>
-<span sec:authorize="isAuthenticated"><a th:href="@{/logout}">Logout</a></span>
+
+<div class="navigation">
+    <a th:href="@{/videos}" th:if="${videos.size() > 0}" class="navigation__link">Watch Videos</a>
+    <a th:href="@{/upload}" class="navigation__link">Upload Video</a>
+    <span sec:authorize="isAuthenticated"><a th:href="@{/logout}" class="navigation__link">Logout</a></span>
+</div>
+
 </body>
 </html>

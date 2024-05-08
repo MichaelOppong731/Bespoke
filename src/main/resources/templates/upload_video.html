@@ -8,6 +8,7 @@
             background-color: #f5f5f5;
             margin: 0;
             padding: 0;
+            font-family: Arial, sans-serif;
         }
 
         .dashboard {
@@ -53,87 +54,15 @@
             background-color: #4b036a;
         }
 
-        .video-info {
-            background-color: #eee;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .video-info__title {
-            font-size: 24px;
-            margin-top: 0;
-        }
-
-        .video-info__description {
-            font-size: 16px;
-            color: #555;
-        }
-
-        .video-player {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: #000;
-            margin-bottom: 20px;
-        }
-
-        .video-player video {
-            width: 100%;
-            height: auto;
-        }
-
-        .share-button {
-            background-color: #5e057e;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-
-        .share-button:hover {
-            background-color: #4b036a;
-        }
-
-        .video-navigation {
-            padding: 20px;
-            text-align: center;
-        }
-
-        .video-navigation__button {
-            background-color: #fff;
-            color: #5e057e;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-
-        .video-navigation__button:last-child {
-            margin-right: 0;
-        }
-
-        .video-navigation__button:hover {
-            background-color: #c299d0;
-            color: #fff;
-
         .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
         .upload-form {
             background-color: #fff;
             padding: 20px;
-            margin: 20px auto;
-            max-width: 600px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
@@ -167,7 +96,7 @@
             border-radius: 5px;
             cursor: pointer;
             display: block;
-            margin: 0 auto;
+            margin: 0 auto 20px; /* Added margin-bottom */
         }
 
         .upload-form__button:hover {
@@ -180,7 +109,7 @@
             padding: 10px;
             border-radius: 5px;
             text-align: center;
-            margin-top: 20px;
+            margin-bottom: 20px; /* Moved the message up */
         }
     </style>
 </head>
@@ -196,11 +125,15 @@
 
 <div class="navigation">
     <a th:href="@{/home}" class="navigation__link">Home</a>
-    <a th:href="@{/videos}" class="navigation__link">Watch Videos</a>
+    <a th:href="@{/videos}" th:if="${videos.size() > 0}" class="navigation__link">Watch Videos</a>
     <span sec:authorize="isAuthenticated"><a th:href="@{/logout}" class="navigation__link">Logout</a></span>
 </div>
 
 <div class="container">
+
+    <div class="success-message" th:if="${successMessage}">
+        Video successfully uploaded!
+    </div>
 
     <div class="upload-form">
         <h2 class="upload-form__title">Upload Video</h2>
@@ -216,11 +149,6 @@
 
             <button class="upload-form__button" type="submit">Upload</button>
         </form>
-
-        <div class="success-message" th:if="${successMessage}">
-            Video successfully uploaded!
-            <a href="/">Back to Home</a>
-        </div>
     </div>
 
 </div>

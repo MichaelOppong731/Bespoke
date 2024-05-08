@@ -41,10 +41,11 @@ public class ContentController {
         model.addAttribute("userdetail", userDetails);
 
         // Load all available videos
+        //This part seeks to hide the videos page if the database is not populated
         List<Video> videos = videoService.getAllVideos();
         model.addAttribute("videos", videos);
 
-       return "admin_test";
+       return "admin_home";
     }
 
     //Redirect to admin or user homepage

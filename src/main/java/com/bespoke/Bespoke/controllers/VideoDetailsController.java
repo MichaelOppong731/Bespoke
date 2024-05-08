@@ -16,6 +16,8 @@ public class VideoDetailsController {
     @Autowired
     private VideoService videoService;
 
+
+    // This endpoint fetches all the videos and render them as List
     @GetMapping
     public List<Video> getVideos() {
         List<Video> videos = videoService.getAllVideos();

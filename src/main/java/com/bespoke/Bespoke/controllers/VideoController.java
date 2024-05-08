@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,8 +42,10 @@ public class VideoController {
 
 
 
+
+    //Get Videos Page
     @GetMapping("/videos")
-    public String getVideos(Model model, Principal principal){
+    public String getVideos(Model model, Principal principal) {
         // Load the user details from appUserService
         AppUser userDetails = (AppUser) appUserService.loadUserByUsernames(principal.getName());
         model.addAttribute("userdetail", userDetails);
@@ -52,6 +55,7 @@ public class VideoController {
 
 
     //Endpoint to fetch video content based on video ID
+    //Video Playback
     @GetMapping("/video/{id}/play")
     public ResponseEntity<Resource> playVideo(@PathVariable("id") Integer id) {
         // Retrieve video content based on the ID using videoService
@@ -77,23 +81,29 @@ public class VideoController {
                 .body(resource);
     }
 
+
+    //Get Video Upload Page
     @GetMapping("/upload")
-    public String showUpLoadPage(Model model, Principal principal, HttpServletResponse response){
+    public String showUpLoadPage(Model model, Principal principal) {
         // Load the user details from appUserService
         AppUser userDetails = (AppUser) appUserService.loadUserByUsernames(principal.getName());
         model.addAttribute("userdetail", userDetails);
 
-        // Set Cache-Control header to prevent caching
-        response.setHeader("Cache-Control", "no-store");
+        // Load all available videos
+        //This part seeks to hide the videos page if the database is not populated
+        List<Video> videos = videoService.getAllVideos();
+        model.addAttribute("videos", videos);
         return "upload_video";
     }
 
+
+    //Post Video Upload Details to the Database
     @PostMapping("/upload")
     public String uploadVideo(
             @RequestParam("title") String title,
             @RequestParam("description") String description,
             @RequestParam("file") MultipartFile file,
-            Model model
+            RedirectAttributes redirectAttributes
     ) throws IOException {
         try {
             // Save the uploaded file to the server
@@ -105,15 +115,13 @@ public class VideoController {
             Video video = new Video(title, description, fileName);
             videoService.uploadVideo(video);
 
-            model.addAttribute("successMessage", true);
+            redirectAttributes.addFlashAttribute("successMessage", "Video successfully uploaded!");
         } catch (IOException e) {
             // Handle file IO exception
             e.printStackTrace();
-            model.addAttribute("errorMessage", "Failed to upload video.");
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to upload video.");
         }
 
-        return "redirect:/upload?success"; // Redirect to success page
+        return "redirect:/upload";
     }
-
-
 }

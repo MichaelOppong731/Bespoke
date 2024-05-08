@@ -98,9 +98,11 @@
         }
 
         .video-navigation {
+            display: flex;
+            justify-content: center;
             padding: 20px;
-            text-align: center;
         }
+
 
         .video-navigation__button {
             background-color: #fff;
@@ -118,7 +120,7 @@
         }
 
         .video-navigation__button:hover {
-            background-color: #c299d0;
+            background-color: #4b036a;
             color: #fff;
         }
     </style>
@@ -158,7 +160,7 @@
 
 <!-- Video navigation buttons -->
 <div class="video-navigation">
-    <h2>Video Navigation</h2>
+<!--    <h2 class="navigate_video">Video Navigation</h2>-->
     <button class="video-navigation__button" onclick="previousVideo()">Previous Video</button>
     <button class="video-navigation__button" onclick="nextVideo()">Next Video</button>
 </div>
@@ -220,21 +222,24 @@
         videoPlayer.load();
         updateButtonVisibility();
     }
-
+    // function for previous button
     function previousVideo() {
-        currentIndex = (currentIndex - 1 + availableVideos.length) % availableVideos.length;
+        if (currentIndex === 0) {
+            return; // Do nothing if on the first video
+        }
+
+        currentIndex = (currentIndex - 1) % availableVideos.length;
         let previousVideo = availableVideos[currentIndex];
 
-         // Update video title and description (same logic as in nextVideo)
         document.querySelector('.video-info__title').textContent = previousVideo.title;
         document.querySelector('.video-info__description').textContent = previousVideo.description;
 
-        // Update video source
         let videoPlayer = document.getElementById('mainVideoPlayer');
         videoPlayer.src = `/video/${previousVideo.id}/play`;
         videoPlayer.load();
         updateButtonVisibility();
     }
+
     // Helper function to update video details and player
     function updateVideoDisplay() {
         const videoInfoTitle = document.querySelector('.video-info__title');
@@ -265,38 +270,36 @@
         let nextButton = document.querySelector('.video-navigation__button:last-child');
         let prevButton = document.querySelector('.video-navigation__button:first-child');
 
-        if (nextButton && prevButton) { // Check if buttons exist
-            // Hide previous button if at the beginning of videos or no videos available
-            if (currentIndex === 0 || availableVideos.length === 0) {
-                prevButton.style.display = 'none';
-            } else {
-                prevButton.style.display = 'block';
-            }
-
-            // Hide next button if at the end of videos or no videos available
-            if (currentIndex === availableVideos.length - 1 || availableVideos.length === 0) {
-                nextButton.style.display = 'none';
-            } else {
-                nextButton.style.display = 'block';
-            }
+        if (availableVideos.length === 0) {
+            // Hide both buttons if no videos are available
+            nextButton.style.display = 'none';
+            prevButton.style.display = 'none';
+        } else {
+            // Show both buttons if videos are available
+            nextButton.style.display = (currentIndex === availableVideos.length - 1) ? 'none' : 'block';
+            prevButton.style.display = (currentIndex === 0) ? 'none' : 'block';
         }
     }
 
 
-    function displayFirstVideo() {
-        fetchVideos().then(() => {
-            if (availableVideos.length > 0) {
-                currentIndex = 0;
-                updateVideoDisplay();
-                updateButtonVisibility();
-            }
-        }).catch(error => {
-            console.error("Failed to fetch videos:", error);
-            // Handle error, e.g., display an error message to the user
-        });
-    }
 
-    // Add the event listener for when the page loads
+    (function() {
+        function displayFirstVideo() {
+            fetchVideos().then(() => {
+                if (availableVideos.length > 0) {
+                    currentIndex = 0;
+                    updateVideoDisplay();
+                    updateButtonVisibility();
+                }
+            }).catch(error => {
+                console.error("Failed to fetch videos:", error);
+                // Handle error, e.g., display an error message to the user
+            });
+        }
+        displayFirstVideo();
+    })();
+
+     // Add the event listener for when the page loads
     document.addEventListener('DOMContentLoaded', function() {
         displayFirstVideo();
     });
