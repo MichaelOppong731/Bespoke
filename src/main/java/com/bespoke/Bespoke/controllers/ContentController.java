@@ -74,7 +74,13 @@ public class ContentController {
 
         AppUser userDetails = (AppUser) appUserService.loadUserByUsernames(principal.getName());
         model.addAttribute("userdetail" , userDetails);
-        return "user_test";
+
+        // Load all available videos
+        //This part seeks to hide the videos page if the database is not populated
+        List<Video> videos = videoService.getAllVideos();
+        model.addAttribute("videos", videos);
+
+        return "user_home";
     }
 // Handle Login
     @GetMapping("/login")
