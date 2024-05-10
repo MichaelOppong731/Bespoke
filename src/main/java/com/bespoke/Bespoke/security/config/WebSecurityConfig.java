@@ -35,7 +35,7 @@ public class WebSecurityConfig {
         return http
                 .csrf(c -> c.disable())
                 .authorizeHttpRequests(request -> {request.requestMatchers("/login", "/register"
-                ,"/password-request", "/reset-password").permitAll();
+                ,"/password-request", "/reset-password", "/account-verification").permitAll();
                 request.requestMatchers("/css/**", "/js/**").permitAll();//Allow static files
                 request.requestMatchers("/Admin/**","/upload").hasAuthority("ROLE_ADMIN");
                 request.requestMatchers("/User/**").hasAuthority("ROLE_USER");

@@ -21,6 +21,7 @@
 
 <div class="navigation">
     <a th:href="@{/home}" class="navigation__link">HomePage</a>
+<!--    Make Upload tab only visible to the Admin-->
     <a th:href="@{/upload}" th:if="${userdetail.role == 'ROLE_ADMIN'}"
        class="navigation__link">Upload Video</a>
     <button class="share-button">Share</button>

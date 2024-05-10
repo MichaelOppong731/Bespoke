@@ -16,39 +16,8 @@ public class VideoService {
 
     public Video uploadVideo(Video video){
         return videoRepository.save(video);
-//        if (video.getTitle().isEmpty()){
-//            throw new ResourceNotFoundException(false,"Video Title cannot be empty");
-//        }
-//        try {
-//            video.setDateCreated(new Date());
-//            return videoRepository.save(video);
-//        }catch (Exception e){
-//            throw new ResourceNotFoundException(false, "something went wrong");
-//        }
-    }
 
-//    public Video getById(Integer id){
-//        Video video = videoRepository.findById(id)
-//                .orElseThrow(()-> new ResourceNotFoundException(false, "Video not found"));
-//        return video;
-//    }
-//
-//    public Video updateVideo(Video video, Integer id){
-//        Video oldVideo = videoRepository.findById(id)
-//                .orElseThrow(()-> new ResourceNotFoundException(false, "Video Not found"));
-//        oldVideo.setTitle(video.getTitle());
-//        oldVideo.setDescription(video.getDescription());
-//        oldVideo.setVideoName(video.getVideoName());
-//        oldVideo.setGenre(video.getGenre());
-//        oldVideo.setDateCreated(new Date());
-//        videoRepository.save(oldVideo);
-//        return oldVideo;
-//    }
-//
-//    public void deleteVideo(Integer id){
-//
-//
-//    }
+    }
 
     public List<Video> getAllVideos(){
         return videoRepository.findAll();
