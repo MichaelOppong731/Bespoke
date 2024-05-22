@@ -34,8 +34,6 @@ public class AppUser implements UserDetails {
     private String firstName;
     @Column(name = "user_lastname")
     private  String lastName;
-    @Column(name = "user_name")
-    private String username;
     @Column(name = "user_email")
     private String email;
     @Column(name = "user_password")
@@ -46,18 +44,16 @@ public class AppUser implements UserDetails {
     private boolean enabled;
 
 
-    public AppUser(String firstName, String lastName, String username, String email, String password){
+    public AppUser(String firstName, String lastName, String email, String password){
         this.firstName = firstName;
         this.lastName = lastName;
-        this.username = username;
         this.email = email;
         this.password = password;
     }
-    public AppUser(String firstName, String lastName, String username, String email, String password, String role,
+    public AppUser(String firstName, String lastName, String email, String password, String role,
      boolean enabled){
         this.firstName = firstName;
         this.lastName = lastName;
-        this.username = username;
         this.email = email;
         this.password = password;
         this.role = role;
@@ -75,7 +71,7 @@ public class AppUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.username;
+        return this.email;
     }
 
     @Override

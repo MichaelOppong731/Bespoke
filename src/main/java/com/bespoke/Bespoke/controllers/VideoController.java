@@ -1,5 +1,8 @@
 package com.bespoke.Bespoke.controllers;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.*;
+import com.amazonaws.HttpMethod;
 import com.bespoke.Bespoke.entities.AppUser;
 import com.bespoke.Bespoke.entities.Video;
 import com.bespoke.Bespoke.service.AppUserService;
@@ -7,8 +10,10 @@ import com.bespoke.Bespoke.service.VideoService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,15 +21,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,96 +39,144 @@ import java.util.UUID;
 @Controller
 public class VideoController {
 
-    @Value("${upload.dir}") // Value from application.properties
-    private String uploadDir;
+    @Autowired
+    private AmazonS3 amazonS3; // Add AmazonS3 client
 
     @Autowired
-    private AppUserService appUserService;
+    AppUserService appUserService;
+
     @Autowired
     private VideoService videoService;
 
+    @Value("${aws.s3.bucket.name}")  // Get bucket name from properties
+    private String bucketName;
 
 
+    //GET ALL VIDEOS
+    @GetMapping("/api/v1/videos")
+    @ResponseBody
+    public List<Video> getVideos() {
+        List<Video> videos = videoService.getAllVideos();
+        return videos;
+    }
 
-    //Get Videos Page
+    //GET VIDEOS PAGE
     @GetMapping("/videos")
     public String getVideos(Model model, Principal principal) {
         // Load the user details from appUserService
-        AppUser userDetails = (AppUser) appUserService.loadUserByUsernames(principal.getName());
+        AppUser userDetails = (AppUser) appUserService.loadUserByUsername(principal.getName());
         model.addAttribute("userdetail", userDetails);
 
         return "videosPage";
     }
 
-
-    //Endpoint to fetch video content based on video ID
-    //Video Playback
-    @GetMapping("/video/{id}/play")
-    public ResponseEntity<Resource> playVideo(@PathVariable("id") Integer id) {
-        // Retrieve video content based on the ID using videoService
-        Optional<Video> optionalVideo = videoService.getVideoById(id);
-        if (!optionalVideo.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        Video video = optionalVideo.get();
-
-        // Construct the path to the video file
-        Path videoPath = Paths.get(uploadDir, video.getFilePath());
-        Resource resource;
-        try {
-            resource = new UrlResource(videoPath.toUri());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType("video/mp4"))
-                .body(resource);
-    }
-
-
-    //Get Video Upload Page
+    // GET UPLOAD VIDEO PAGE
     @GetMapping("/upload")
-    public String showUpLoadPage(Model model, Principal principal) {
+    public String showUploadForm(Model model, Principal principal) {
         // Load the user details from appUserService
-        AppUser userDetails = (AppUser) appUserService.loadUserByUsernames(principal.getName());
+        AppUser userDetails = (AppUser) appUserService.loadUserByUsername(principal.getName());
         model.addAttribute("userdetail", userDetails);
 
-        // Load all available videos
-        //This part seeks to hide the videos page if the database is not populated
+        // Check from database if there are videos
+        //If no there are no videos, the "watch videos" tab won't be displayed to the user
         List<Video> videos = videoService.getAllVideos();
         model.addAttribute("videos", videos);
-        return "upload_video";
+
+        return "upload_video"; // Assuming this is your upload form template
     }
 
-
-    //Post Video Upload Details to the Database
+    // UPLOAD VIDEO METHOD
     @PostMapping("/upload")
     public String uploadVideo(
             @RequestParam("title") String title,
             @RequestParam("description") String description,
             @RequestParam("file") MultipartFile file,
             RedirectAttributes redirectAttributes
-    ) throws IOException {
+    ) {
         try {
-            // Save the uploaded file to the server
-            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            File videoFile = new File(uploadDir + File.separator + fileName);
-            file.transferTo(videoFile);
+            // Generate a unique object key
+            String objectKey = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
-            // Save video details to the database
-            Video video = new Video(title, description, fileName);
+            // Upload to S3
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(file.getSize());
+            metadata.setContentType(file.getContentType());
+
+            PutObjectRequest request = new PutObjectRequest(bucketName, objectKey, file.getInputStream(), metadata);
+            amazonS3.putObject(request);
+
+
+            // SAVE VIDEO DETAILS TO DATABASE USING OBJECTKEY AS THE PATH
+            Video video = new Video(title, description, objectKey, file.getSize()); // Use objectKey, not fileName
             videoService.uploadVideo(video);
 
             redirectAttributes.addFlashAttribute("successMessage", "Video successfully uploaded!");
         } catch (IOException e) {
-            // Handle file IO exception
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to upload video.");
         }
 
         return "redirect:/upload";
     }
+
+    // VIDEO PLAYBACK METHOD THAT STREAMS THE VIDEO FROM S3 BUCKET
+    @GetMapping(value = "/video/{id}/play", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @ResponseBody
+    public ResponseEntity<StreamingResponseBody> playVideo(@PathVariable("id") Integer id, @RequestHeader(value = "Range", required = false) String rangeHeader) {
+        Optional<Video> optionalVideo = videoService.getVideoById(id);
+        if (optionalVideo.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Video video = optionalVideo.get();
+        String filePath = video.getFilePath();
+
+        S3Object s3Object = amazonS3.getObject(new GetObjectRequest(bucketName, filePath));
+        InputStream inputStream = s3Object.getObjectContent();
+        long contentLength = s3Object.getObjectMetadata().getContentLength();
+        long start = 0;
+        long end = contentLength - 1;
+
+        if (rangeHeader != null && rangeHeader.startsWith("bytes=")) {
+            String[] ranges = rangeHeader.substring(6).split("-");
+            try {
+                start = Long.parseLong(ranges[0]);
+                if (ranges.length > 1) {
+                    end = Long.parseLong(ranges[1]);
+                }
+            } catch (NumberFormatException ignored) {
+                // If there's an error in parsing the range, ignore it and use full length
+            }
+        }
+
+        final long finalStart = start;
+        final long finalEnd = end;
+        StreamingResponseBody responseBody = outputStream -> {
+            inputStream.skip(finalStart);
+            byte[] buffer = new byte[1024];
+            long bytesRead = 0;
+            while (bytesRead <= finalEnd - finalStart) {
+                int read = inputStream.read(buffer);
+                if (read == -1) {
+                    break;
+                }
+                outputStream.write(buffer, 0, read);
+                bytesRead += read;
+            }
+            inputStream.close();
+        };
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("video/mp4"));
+        headers.add("Content-Range", "bytes " + finalStart + "-" + finalEnd + "/" + contentLength);
+        headers.setContentLength(finalEnd - finalStart + 1);
+        return new ResponseEntity<>(responseBody, headers, HttpStatus.PARTIAL_CONTENT);
+    }
+
 }
+
+
+
+
+
+

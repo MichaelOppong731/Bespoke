@@ -31,11 +31,16 @@ public class ForgotPasswordController {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+
+    //GET FORGOT-PASSWORD PAGE
     @GetMapping("/password-request")
     public String forgotPasswordPage(){
 
         return "forgotPassword";
     }
+
+    //CREATE NEW ENTITY FOR FORGOT-PASSWORD AND ADD TO DATABASE
     @PostMapping("/password-request")
     public String savePasswordRequest(@RequestParam("email") String email, Model model){
         Optional<AppUser> user = appUserService.findByEmail(email);
@@ -52,7 +57,7 @@ public class ForgotPasswordController {
         forgotPasswordService.saveToken(forgotPasswordToken);
 
 
-        //Set emailLink
+        //SET EMAIL LINK
         String emailLink = "http://localhost:8080/reset-password?token="+ forgotPasswordToken.getToken();
         try {
             forgotPasswordService.sendMail(user.get().getEmail(), "Password Reset Link",emailLink);
@@ -63,6 +68,7 @@ public class ForgotPasswordController {
         return "redirect:/forgotPassword?success";
     }
 
+    //GET RESET-PASSWORD PAGE
     @GetMapping("/reset-password")
     public String resetPasswordPage(@Param(value = "token") String token , Model model, HttpSession session){
         session.setAttribute("token", token);//Begin a session using the token in the parameter of the url
@@ -70,6 +76,8 @@ public class ForgotPasswordController {
         return forgotPasswordService.checkValidity(forgotPasswordToken,model);
 
     }
+
+    //GET NEW PASSWORD OF USER AND SAVE IN DATABASE
     @PostMapping("/reset-password")
     public String saveResetPassword(HttpServletRequest request, HttpSession session, Model model){
         String password = request.getParameter("password");

@@ -24,6 +24,7 @@ public class AppUserService implements UserDetailsService {
 
 
     // This part deals with App User Authentication by Email
+    //And helps to load user details in the dashboard
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
@@ -37,33 +38,22 @@ public class AppUserService implements UserDetailsService {
         }
     }
 
-    //Get username of Existing User
-    public UserDetails loadUserByUsernames(String username) throws UsernameNotFoundException {
 
-        Optional<AppUser> opt = appUserRepository.findByUsername(username);
-        if(opt.isEmpty()){
-            throw new UsernameNotFoundException(
-                    String.format(USER_NAME_NOT_FOUND, username)
-            );
-        }else {
-            return opt.get();
-        }
-    }
     // Save User and manually assign the role of "USER" to the new user
-        public Integer saveUser(AppUser appUser) {
+    public void saveUser(AppUser appUser) {
         String passwd = appUser.getPassword();
         String encodePasswd = passwordEncoder.encode(passwd);
         appUser.setPassword(encodePasswd);
-        appUser = appUserRepository.save(appUser);
-        return appUser.getId();
+        appUserRepository.save(appUser);
+
     }
 
-        public void updatePassword(AppUser appUser){
+    public void updatePassword(AppUser appUser){
         appUserRepository.save(appUser);
         }
 
     public Optional<AppUser> findByEmail(String email) {
 
-        return appUserRepository.findByEmail(email);
+            return appUserRepository.findByEmail(email);
     }
 }

@@ -9,6 +9,7 @@ import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Controller
-public class AppUserController {
+public class RegistrationController {
     @Autowired
     private AppUserService appUserService;
 
@@ -25,7 +26,14 @@ public class AppUserController {
     private VerificationTokenService verificationTokenService;
 
 
-    //Read Form data to save into DataBase
+    //GET REGISTRATION PAGE
+    @GetMapping("/register")
+    public String registrationPage(Model model, UserModel userModel){
+        model.addAttribute("user", userModel);
+        return "registration";
+    }
+
+    //READ FROM DATA TO SAVE INTO DATABASE
     @PostMapping("/register")
     public String saveUser(@ModelAttribute("user") UserModel userModel, Model model){
         Optional<AppUser> user = appUserService.findByEmail(userModel.getEmail());
@@ -38,7 +46,6 @@ public class AppUserController {
             AppUser appUser = new AppUser();
             appUser.setFirstName(userModel.getFirstName());
             appUser.setLastName(userModel.getLastName());
-            appUser.setUsername(userModel.getUsername());
             appUser.setEmail(userModel.getEmail());
             appUser.setPassword(userModel.getPassword());
             appUser.setRole("ROLE_USER");

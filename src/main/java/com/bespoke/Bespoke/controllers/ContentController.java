@@ -37,7 +37,7 @@ public class ContentController {
     @GetMapping("/admin/home")
     public String adminHome(Model model, Principal principal){
         // Load the user details from your appUserService
-        AppUser userDetails = (AppUser) appUserService.loadUserByUsernames(principal.getName());
+        AppUser userDetails = (AppUser) appUserService.loadUserByUsername(principal.getName());
         model.addAttribute("userdetail", userDetails);
 
         // Load all available videos
@@ -52,7 +52,7 @@ public class ContentController {
     @GetMapping("/home")
     public String redirectToDashboard(Model model, Principal principal) {
         if (principal != null) {
-            AppUser userDetails = (AppUser) appUserService.loadUserByUsernames(principal.getName());
+            AppUser userDetails = (AppUser) appUserService.loadUserByUsername(principal.getName());
             boolean isAdmin = userDetails.getRole().contains("ADMIN");
             if (isAdmin) {
                 return "redirect:/admin/home";
@@ -72,7 +72,7 @@ public class ContentController {
     @GetMapping("/user/home")
     public String userHome(Model model, Principal principal){
 
-        AppUser userDetails = (AppUser) appUserService.loadUserByUsernames(principal.getName());
+        AppUser userDetails = (AppUser) appUserService.loadUserByUsername(principal.getName());
         model.addAttribute("userdetail" , userDetails);
 
         // Load all available videos
@@ -82,7 +82,7 @@ public class ContentController {
 
         return "user_home";
     }
-// Handle Login
+    // Handle Login Page
     @GetMapping("/login")
     public String loginPage(Model model, UserModel userModel){
         model.addAttribute("user", userModel);
@@ -94,9 +94,5 @@ public class ContentController {
         return "403";
     }
 
-    @GetMapping("/register")
-    public String registrationPage(Model model, UserModel userModel){
-        model.addAttribute("user", userModel);
-        return "registration";
-    }
+
 }

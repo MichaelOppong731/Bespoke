@@ -12,14 +12,13 @@
 <div class="container">
   <div class="form-container">
 
+    <img th:src="@{/images/Logo.png}" alt="Logo" class="logo"/>
 
     <div th:if="${param.error}">
       <div class="error-message">
         <p>Invalid Username or password</p>
       </div>
     </div>
-
-
 
     <div th:if="${param.logout}">
       <div class="logout-message">
@@ -32,9 +31,7 @@
             method="post"
             role="form"
             th:action="@{/login}"
-            th:object="${user}"
-
-    >
+            th:object="${user}">
 
       <div class="form-group">
         <label for="username">Email</label>

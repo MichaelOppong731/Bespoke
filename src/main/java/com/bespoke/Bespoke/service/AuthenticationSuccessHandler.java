@@ -15,7 +15,8 @@ public class AuthenticationSuccessHandler implements org.springframework.securit
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
-        // TODO Auto-generated method stub
+
+        // ROLE-BASED REDIRECTION
 
         var authourities = authentication.getAuthorities();
         var roles = authourities.stream().map(r -> r.getAuthority()).findFirst();

@@ -17,13 +17,15 @@ public class Video {
     private String title;
     private String description;
     private String filePath;
+    private Long fileSize;
     private LocalDateTime dateCreated;
 
 
-    public Video(String title, String description, String filePath){
+    public Video(String title, String description, String filePath, Long fileSize){
         this.title = title;
         this.description = description;
         this.filePath = filePath;
+        this.fileSize = fileSize;
     }
     @PrePersist
     private void onClick(){

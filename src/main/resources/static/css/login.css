@@ -4,6 +4,14 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
+
+  }
+
+
+  .logo {
+      max-width: 200px; /* Adjust as needed */
+      margin: 20px auto; /* Center horizontally and add top margin */
+      display: block;    /* Ensure the logo takes up the full width */
   }
 
   .form-container {

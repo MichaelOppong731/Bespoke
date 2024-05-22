@@ -20,7 +20,7 @@ public class BespokeApplication {
 	CommandLineRunner setAdmin(AppUserRepository appUserRepository, BCryptPasswordEncoder passwordEncoder){
 		return args ->{
 			AppUser Admin = new AppUser("Paul","Oppong",
-					"Admin","michaeloppong731@gmail.com",
+					"michaeloppong731@gmail.com",
 					passwordEncoder.encode("password"),
                     "ROLE_ADMIN", true);
 			appUserRepository.save(Admin);
