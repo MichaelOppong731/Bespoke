@@ -60,7 +60,7 @@ public class ForgotPasswordController {
 
 
         //SET EMAIL LINK
-        String emailLink = "http://localhost:8080/reset-password?token="+ forgotPasswordToken.getToken();
+        String emailLink = "https://pauls-bespoke.onrender.com/reset-password?token="+ forgotPasswordToken.getToken();
         try {
             forgotPasswordService.sendMail(user.get().getEmail(), "Password Reset Link",emailLink);
         } catch (MessagingException | UnsupportedEncodingException e) {
