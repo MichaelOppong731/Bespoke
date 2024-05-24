@@ -10,7 +10,7 @@
 
 <div class="dashboard">
     <img th:src="@{/images/whiteLogo.png}" alt="Logo" class="logo"/>
-    <h1 class="dashboard__title">Welcome to the Dashboard</h1>
+    <h1 class="dashboard__title">Welcome to the Video Upload Page</h1>
     <div class="dashboard__user">
         <h2 th:text="${userdetail.firstName}" class="dashboard__user-name">User's Name</h2>
     </div>
@@ -23,14 +23,12 @@
 </div>
 
 <div class="container">
-
-    <div class="success-message" th:if="${successMessage}">
-        Video successfully uploaded!
-    </div>
+    <div class="success-message" th:if="${successMessage}" th:text="${successMessage}"></div>
+    <div class="error-message" th:if="${errorMessage}" th:text="${errorMessage}"></div>
 
     <div class="upload-form">
         <h2 class="upload-form__title">Upload Video</h2>
-        <form action="/upload" method="post" enctype="multipart/form-data">
+        <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
             <label class="upload-form__label" for="videoTitle">Title:</label>
             <input class="upload-form__input" type="text" id="videoTitle" name="title" required>
 
@@ -40,11 +38,28 @@
             <label class="upload-form__label" for="videoFile">Choose Video:</label>
             <input class="upload-form__input" type="file" id="videoFile" name="file" accept="video/mp4" required>
 
-            <button class="upload-form__button" type="submit">Upload</button>
+            <button id="uploadButton" class="upload-form__button" type="submit">Upload</button>
+            <div id="loadingIndicator" class="loading-indicator" style="display: none;">Uploading...</div>
         </form>
     </div>
 
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const uploadForm = document.getElementById('uploadForm');
+        const uploadButton = document.getElementById('uploadButton');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+
+        uploadForm.addEventListener('submit', function() {
+            // Hide the upload button
+            uploadButton.style.display = 'none';
+
+            // Show the loading indicator
+            loadingIndicator.style.display = 'block';
+        });
+    });
+</script>
 
 </body>
 </html>

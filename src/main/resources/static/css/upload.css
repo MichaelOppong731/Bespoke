@@ -1,117 +1,132 @@
-/* Style for upload page*/
+/* Style for upload page */
 body {
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
 
-        .dashboard {
-                    position: relative;
-                    background-color: #5e057e;
-                    color: #fff;
-                    padding: 40px;
-                    text-align: center;
-                    margin-bottom: 20px;
-                }
+.dashboard {
+    position: relative;
+    background-color: #5e057e;
+    color: #fff;
+    padding: 40px;
+    text-align: center;
+    margin-bottom: 20px;
+}
 
-                .logo {
-                    position: absolute; /* This will position the logo relative to the .dashboard div */
-                    top: 10px; /* Adjust these values */
-                    left: 10px; /* Adjust these values */
-                    width: 250px; /* Adjust these values */
-                    height: 250px; /* Adjust these values */
-                }
+.logo {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 250px;
+    height: 250px;
+}
 
-        .dashboard__title {
-            font-size: 24px;
-            margin-top: 0;
-        }
+.dashboard__title {
+    font-size: 24px;
+    margin-top: 0;
+}
 
-        .dashboard__user {
-            margin-top: 20px;
-        }
+.dashboard__user {
+    margin-top: 20px;
+}
 
-        .dashboard__user-name {
-            font-size: 50px;
-            color: #c299d0;
-        }
+.dashboard__user-name {
+    font-size: 50px;
+    color: #c299d0;
+}
 
-        .navigation {
-            background-color: #5e057e;
-            color: #fff;
-            padding: 10px 0;
-            text-align: center;
-            margin-top: 20px;
-        }
+.navigation {
+    background-color: #5e057e;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+    margin-top: 20px;
+}
 
-        .navigation__link {
-            color: #fff;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            margin-right: 10px;
-            cursor: pointer;
-        }
+.navigation__link {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-right: 10px;
+    cursor: pointer;
+}
 
-        .navigation__link:hover {
-            background-color: #4b036a;
-        }
+.navigation__link:hover {
+    background-color: #4b036a;
+}
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
 
-        .upload-form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+.upload-form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
-        .upload-form__title {
-            font-size: 24px;
-            margin-top: 0;
-            margin-bottom: 20px;
-            text-align: center;
-        }
+.upload-form__title {
+    font-size: 24px;
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-align: center;
+}
 
-        .upload-form__label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
+.upload-form__label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
 
-        .upload-form__input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
+.upload-form__input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
 
-        .upload-form__button {
-            background-color: #5e057e;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            display: block;
-            margin: 0 auto 20px; /* Added margin-bottom */
-        }
+.upload-form__button {
+    background-color: #5e057e;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto 20px;
+}
 
-        .upload-form__button:hover {
-            background-color: #4b036a;
-        }
+.upload-form__button:hover {
+    background-color: #4b036a;
+}
 
-        .success-message {
-            background-color: #2ecc71;
-            color: #fff;
-            padding: 10px;
-            border-radius: 5px;
-            text-align: center;
-            margin-bottom: 20px; /* Moved the message up */
-        }
+.success-message {
+    background-color: #2ecc71;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.error-message {
+    background-color: #e74c3c;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.loading-indicator {
+    text-align: center;
+    font-size: 16px;
+    color: #5e057e;
+}

@@ -2,6 +2,8 @@ package com.bespoke.Bespoke;
 
 import com.bespoke.Bespoke.entities.AppUser;
 import com.bespoke.Bespoke.repository.AppUserRepository;
+import com.bespoke.Bespoke.service.AppUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,19 +13,28 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @SpringBootApplication
 public class BespokeApplication {
 
+
+
 	public static void main(String[] args) {
 		SpringApplication.run(BespokeApplication.class, args);
 	}
 
 
 	@Bean
-	CommandLineRunner setAdmin(AppUserRepository appUserRepository, BCryptPasswordEncoder passwordEncoder){
+	CommandLineRunner setAdmin(AppUserService appUserService){
 		return args ->{
-			AppUser Admin = new AppUser("Paul","Oppong",
+			if(appUserService.findByEmail("michaeloppong731@gmail.com").isEmpty()){
+				AppUser Admin = new AppUser("Paul","Oppong",
 					"michaeloppong731@gmail.com",
-					passwordEncoder.encode("password"),
+					"password",
                     "ROLE_ADMIN", true);
-			appUserRepository.save(Admin);
+
+				appUserService.saveUser(Admin);
+				System.out.println("Admin has been created!!");
+
+			}else {
+				System.out.println("Admin exists Already!!");
+			}
 
 		};
 	}

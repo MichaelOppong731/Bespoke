@@ -7,6 +7,7 @@ import com.bespoke.Bespoke.service.AppUserService;
 import com.bespoke.Bespoke.service.VerificationTokenService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,9 @@ import java.util.Optional;
 public class RegistrationController {
     @Autowired
     private AppUserService appUserService;
+
+    @Value("${app.base-url}")
+    private String baseUrl;
 
     @Autowired
     private VerificationTokenService verificationTokenService;
@@ -66,7 +70,7 @@ public class RegistrationController {
 
         // SEND TOKEN TO NEW USER
 
-        String emailLink = "http://localhost:8080/account-verification?token="+ verificationToken.getToken();//Set emailLink
+        String emailLink = baseUrl + "/account-verification?token="+ verificationToken.getToken();//Set emailLink
         try {
             verificationTokenService.sendMail(appUser.getEmail(), "Verify Email",emailLink);
         } catch (MessagingException | UnsupportedEncodingException e) {

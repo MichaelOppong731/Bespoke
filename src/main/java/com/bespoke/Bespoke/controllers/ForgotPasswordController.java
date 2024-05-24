@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,9 @@ public class ForgotPasswordController {
     private AppUserService appUserService;
     @Autowired
     private ForgotPasswordService forgotPasswordService;
+
+    @Value("${app.base-url}")
+    private String baseUrl;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -58,7 +62,7 @@ public class ForgotPasswordController {
 
 
         //SET EMAIL LINK
-        String emailLink = "http://localhost:8080/reset-password?token="+ forgotPasswordToken.getToken();
+        String emailLink = baseUrl + "/reset-password?token="+ forgotPasswordToken.getToken();
         try {
             forgotPasswordService.sendMail(user.get().getEmail(), "Password Reset Link",emailLink);
         } catch (MessagingException | UnsupportedEncodingException e) {

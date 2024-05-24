@@ -91,7 +91,7 @@ function updateButtonVisibility() {
     }
 }
 
-(function() {
+//Function to Display the First Video
     function displayFirstVideo() {
         fetchVideos().then(() => {
             if (availableVideos.length > 0) {
@@ -103,8 +103,8 @@ function updateButtonVisibility() {
             console.error("Failed to fetch videos:", error);
         });
     }
-    displayFirstVideo();
-})();
+
+
 
 // Add the event listener for when the page loads
 document.addEventListener('DOMContentLoaded', function() {
