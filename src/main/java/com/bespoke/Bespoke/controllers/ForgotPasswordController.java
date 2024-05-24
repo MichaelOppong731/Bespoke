@@ -17,7 +17,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
@@ -30,8 +29,7 @@ public class ForgotPasswordController {
     @Autowired
     private ForgotPasswordService forgotPasswordService;
 
-    @Value("${app.base-url}")
-    private String baseUrl;
+
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -62,7 +60,7 @@ public class ForgotPasswordController {
 
 
         //SET EMAIL LINK
-        String emailLink = baseUrl + "/reset-password?token="+ forgotPasswordToken.getToken();
+        String emailLink = "http://localhost:8080/reset-password?token="+ forgotPasswordToken.getToken();
         try {
             forgotPasswordService.sendMail(user.get().getEmail(), "Password Reset Link",emailLink);
         } catch (MessagingException | UnsupportedEncodingException e) {
