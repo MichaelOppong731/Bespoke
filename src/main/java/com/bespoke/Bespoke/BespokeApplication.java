@@ -2,6 +2,7 @@ package com.bespoke.Bespoke;
 
 import com.bespoke.Bespoke.entities.AppUser;
 import com.bespoke.Bespoke.service.AppUserService;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,10 +15,10 @@ public class BespokeApplication {
 
 	public static void main(String[] args) {
         // Load environment variables from .env file
-//        Dotenv dotenv = Dotenv.load();
-//
-//        // Set environment variables programmatically
-//        dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
+        Dotenv dotenv = Dotenv.load();
+
+       // Set environment variables programmatically
+       dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
 
 		SpringApplication.run(BespokeApplication.class, args);
 	}
