@@ -4,6 +4,7 @@ WORKDIR /app
 # Copy the project files and build the JAR
 COPY pom.xml .
 COPY src ./src
+
 RUN mvn clean package -DskipTests
 
 # Run Stage
