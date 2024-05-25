@@ -14,11 +14,11 @@ public class BespokeApplication {
 
 
 	public static void main(String[] args) {
-        // Load environment variables from .env file
-        Dotenv dotenv = Dotenv.load();
-
-       // Set environment variables programmatically
-       dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
+//        // Load environment variables from .env file
+//        Dotenv dotenv = Dotenv.load();
+//
+//       // Set environment variables programmatically
+//       dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
 
 		SpringApplication.run(BespokeApplication.class, args);
 	}
