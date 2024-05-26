@@ -28,7 +28,7 @@ public class BespokeApplication {
 	CommandLineRunner setAdmin(AppUserService appUserService){
 		return args ->{
 			if(appUserService.findByEmail("michaeloppong731@gmail.com").isEmpty()){
-				AppUser Admin = new AppUser("Paul","Oppong",
+				AppUser Admin = new AppUser("Paul","Leonard",
 					"michaeloppong731@gmail.com",
 					"password",
                     "ROLE_ADMIN", true);

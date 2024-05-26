@@ -5,6 +5,7 @@ import com.bespoke.Bespoke.entities.Video;
 import com.bespoke.Bespoke.models.UserModel;
 import com.bespoke.Bespoke.service.AppUserService;
 import com.bespoke.Bespoke.service.VideoService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -48,7 +49,7 @@ public class ContentController {
        return "admin_home";
     }
 
-    //Redirect to admin or user homepage
+    //Redirect to admin or user homepage when they click on the Home tab when logged in
     @GetMapping("/home")
     public String redirectToDashboard(Model model, Principal principal) {
         if (principal != null) {
@@ -82,17 +83,14 @@ public class ContentController {
 
         return "user_home";
     }
-    // Handle Login Page
+    // LOGIN PAGE
     @GetMapping("/login")
     public String loginPage(Model model, UserModel userModel){
         model.addAttribute("user", userModel);
         return "custom_login";
     }
 
-    @GetMapping("/error")
-    public String error(){
-        return "403";
-    }
+
 
 
 }
