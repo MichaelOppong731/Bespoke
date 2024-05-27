@@ -2,7 +2,7 @@
 FROM maven:3.8.3-openjdk-17 AS build
 WORKDIR /app
 # Copy the project files and build the JAR
-COPY pom.xml .
+COPY . .
 COPY src ./src
 
 
