@@ -78,6 +78,23 @@ public class VideoController {
         return "upload_video"; // Assuming this is your upload form template
     }
 
+    @GetMapping("/videos/{id}")
+    public String showVideoPage(@PathVariable("id") Integer id, Model model, Principal principal) {
+        // Load the user details from appUserService
+        AppUser userDetails = (AppUser) appUserService.loadUserByUsername(principal.getName());
+        model.addAttribute("userdetail", userDetails);
+
+        Optional<Video> optionalVideo = videoService.getVideoById(id);
+        if (optionalVideo.isPresent()) {
+            model.addAttribute("video", optionalVideo.get());
+            // Add other necessary attributes to the model
+            return "videosPage";
+        } else {
+            return "errorPage"; // Or handle the error differently
+        }
+    }
+
+
     // UPLOAD VIDEO METHOD
     @PostMapping("/upload")
     public String uploadVideo(

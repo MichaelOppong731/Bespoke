@@ -3,14 +3,16 @@
 // Share button
 function copyVideoLink() {
     let currentVideo = availableVideos[currentIndex];
-    let videoLink = window.location.origin + '/video/' + currentVideo.id + '/play';
+    // Build the link to the video page, not the playback endpoint
+    let videoLink = window.location.origin + '/videos/' + currentVideo.id;
 
-    navigator.clipboard.writeText(videoLink).then(function () {
-        alert('Video link copied to clipboard!');
-    }, function () {
+    navigator.clipboard.writeText(videoLink).then(function() {
+        alert('Video page link copied to clipboard!');
+    }, function() {
         alert('Failed to copy video link.');
     });
 }
+
 
 // Attaching the event listener to the share button
 document.querySelector('.share-button').addEventListener('click', copyVideoLink);
@@ -91,18 +93,36 @@ function updateButtonVisibility() {
     }
 }
 
-//Function to Display the First Video
-    function displayFirstVideo() {
-        fetchVideos().then(() => {
-            if (availableVideos.length > 0) {
-                currentIndex = 0;
-                updateVideoDisplay();
-                updateButtonVisibility();
+// Function to get video ID from URL
+function getVideoIdFromUrl() {
+    let path = window.location.pathname;
+    let pathParts = path.split('/');
+    return pathParts[pathParts.length - 1];
+}
+
+
+function displayFirstVideo() {
+    const videoId = getVideoIdFromUrl();
+
+    fetchVideos().then(() => {
+        if (videoId) { // Check if videoId exists in the URL
+            currentIndex = availableVideos.findIndex(video => video.id == videoId);
+            if (currentIndex === -1) { // Check if video was not found
+                console.error("Video not found");
+                // Handle case where the video is not found (e.g., show an error message)
+                currentIndex = 0; // Reset currentIndex to 0
             }
-        }).catch(error => {
-            console.error("Failed to fetch videos:", error);
-        });
-    }
+        } else if (availableVideos.length > 0) {
+            currentIndex = 0;
+        }
+        updateVideoDisplay();
+        updateButtonVisibility();
+    }).catch(error => {
+        console.error("Failed to fetch videos:", error);
+        // Handle error, e.g., display an error message to the user
+    });
+}
+
 
 
 

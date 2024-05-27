@@ -26,7 +26,7 @@
 <!--    Make Upload tab only visible to the Admin-->
     <a th:href="@{/upload}" th:if="${userdetail.role == 'ROLE_ADMIN'}"
        class="navigation__link">Upload Video</a>
-    <button class="share-button">Share</button>
+    <button class="share-button">Share Video Link</button>
     <span sec:authorize="isAuthenticated"><a th:href="@{/logout}" class="navigation__link">Logout</a></span>
 </div>
 
